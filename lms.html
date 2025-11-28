@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Management System</title>
+    <title>LearnHub - Learning Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #3498db;
-            --secondary: #2c3e50;
-            --success: #2ecc71;
-            --danger: #e74c3c;
-            --warning: #f39c12;
-            --light: #ecf0f1;
-            --dark: #34495e;
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --info: #7209b7;
+            --warning: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --sidebar-width: 250px;
         }
         
         * {
@@ -23,51 +25,90 @@
         }
         
         body {
-            background-color: #f5f7fa;
+            background-color: #f5f7fb;
             color: var(--dark);
             line-height: 1.6;
         }
         
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        /* Header Styles */
-        header {
-            background-color: var(--secondary);
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .header-content {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem 1rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: all 0.3s;
+            z-index: 1000;
         }
         
         .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-        
-        .nav-links {
             display: flex;
-            gap: 1.5rem;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
         }
         
-        .nav-links a {
+        .logo i {
+            font-size: 1.75rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .menu-item {
+            margin-bottom: 0.5rem;
+        }
+        
+        .menu-item a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
             color: white;
             text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            transition: background-color 0.3s;
+            border-radius: 8px;
+            transition: all 0.3s;
         }
         
-        .nav-links a:hover {
+        .menu-item a:hover, .menu-item a.active {
             background-color: rgba(255,255,255,0.1);
+        }
+        
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e0e0e0;
         }
         
         .user-info {
@@ -76,13 +117,176 @@
             gap: 1rem;
         }
         
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* Dashboard Stats */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .stat-icon.courses {
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+        }
+        
+        .stat-icon.students {
+            background: linear-gradient(135deg, #4cc9f0, #4895ef);
+        }
+        
+        .stat-icon.progress {
+            background: linear-gradient(135deg, #f72585, #b5179e);
+        }
+        
+        .stat-icon.completed {
+            background: linear-gradient(135deg, #2ec4b6, #06d6a0);
+        }
+        
+        .stat-info h3 {
+            font-size: 1.75rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-info p {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        /* Course Cards */
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+        }
+        
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .course-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .course-image {
+            height: 160px;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+        
+        .course-content {
+            padding: 1.5rem;
+        }
+        
+        .course-category {
+            display: inline-block;
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .course-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .progress-container {
+            margin-bottom: 1rem;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            border-radius: 4px;
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        
         .btn {
             padding: 0.5rem 1rem;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: 500;
             transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
         .btn-primary {
@@ -90,41 +294,165 @@
             color: white;
         }
         
-        .btn-danger {
-            background-color: var(--danger);
-            color: white;
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
         }
         
-        .btn-success {
-            background-color: var(--success);
-            color: white;
-        }
-        
-        .btn:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
-        
-        /* Main Content */
-        main {
-            padding: 2rem 0;
-            min-height: calc(100vh - 140px);
-        }
-        
-        /* Auth Forms */
-        .auth-container {
-            max-width: 400px;
-            margin: 2rem auto;
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        .auth-container h2 {
-            margin-bottom: 1.5rem;
+        .btn-block {
+            display: block;
+            width: 100%;
             text-align: center;
-            color: var(--secondary);
+            justify-content: center;
+        }
+        
+        /* Activity Feed */
+        .activity-feed {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .activity-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(67, 97, 238, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+        
+        .activity-content h4 {
+            margin-bottom: 0.25rem;
+        }
+        
+        .activity-content p {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .activity-time {
+            font-size: 0.8rem;
+            color: #adb5bd;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+                padding: 1rem 0.5rem;
+            }
+            
+            .logo h1, .menu-item span {
+                display: none;
+            }
+            
+            .logo {
+                justify-content: center;
+            }
+            
+            .menu-item a {
+                justify-content: center;
+                padding: 0.75rem;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
         }
         
         .form-group {
@@ -141,7 +469,7 @@
             width: 100%;
             padding: 0.75rem;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 1rem;
         }
         
@@ -150,187 +478,9 @@
             border-color: var(--primary);
         }
         
-        .auth-switch {
-            text-align: center;
-            margin-top: 1rem;
-        }
-        
-        .auth-switch a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-        
-        /* Dashboard Styles */
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-        
-        .dashboard-header h1 {
-            color: var(--secondary);
-        }
-        
-        .card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--secondary);
-        }
-        
-        /* Table Styles */
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .table th, .table td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .table th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-            color: var(--secondary);
-        }
-        
-        .table tr:hover {
-            background-color: #f8f9fa;
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        
-        .badge-success {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        
-        .badge-warning {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-        
-        .badge-danger {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .modal-content {
-            background: white;
-            width: 90%;
-            max-width: 500px;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            overflow: hidden;
-        }
-        
-        .modal-header {
-            padding: 1rem 1.5rem;
-            background-color: var(--secondary);
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .modal-close {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        
-        .modal-body {
-            padding: 1.5rem;
-        }
-        
-        .modal-footer {
-            padding: 1rem 1.5rem;
-            background-color: #f8f9fa;
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.5rem;
-        }
-        
-        /* Alert Styles */
-        .alert {
-            padding: 0.75rem 1.25rem;
-            margin-bottom: 1rem;
-            border: 1px solid transparent;
-            border-radius: 4px;
-        }
-        
-        .alert-success {
-            color: #155724;
-            background-color: #d4edda;
-            border-color: #c3e6cb;
-        }
-        
-        .alert-danger {
-            color: #721c24;
-            background-color: #f8d7da;
-            border-color: #f5c6cb;
-        }
-        
         /* Utility Classes */
         .text-center {
             text-align: center;
-        }
-        
-        .d-none {
-            display: none;
-        }
-        
-        .d-flex {
-            display: flex;
-        }
-        
-        .justify-content-between {
-            justify-content: space-between;
-        }
-        
-        .align-items-center {
-            align-items: center;
         }
         
         .mb-3 {
@@ -341,161 +491,334 @@
             margin-top: 1rem;
         }
         
-        .w-100 {
-            width: 100%;
+        .d-none {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container header-content">
-            <div class="logo">Employee Management System</div>
-            <nav class="nav-links" id="navLinks">
-                <!-- Navigation links will be populated by JS -->
-            </nav>
-            <div class="user-info" id="userInfo">
-                <!-- User info will be populated by JS -->
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <h1>LearnHub</h1>
             </div>
+            <ul class="sidebar-menu">
+                <li class="menu-item">
+                    <a href="#" class="active" data-tab="dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" data-tab="courses">
+                        <i class="fas fa-book-open"></i>
+                        <span>My Courses</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" data-tab="progress">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Progress</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" data-tab="resources">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Resources</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" data-tab="discussions">
+                        <i class="fas fa-comments"></i>
+                        <span>Discussions</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" data-tab="admin" class="admin-only">
+                        <i class="fas fa-cog"></i>
+                        <span>Admin Panel</span>
+                    </a>
+                </li>
+            </ul>
         </div>
-    </header>
 
-    <main class="container">
-        <!-- Authentication Section -->
-        <section id="authSection">
-            <div class="auth-container" id="loginForm">
-                <h2>Login to Your Account</h2>
-                <form id="loginFormElement">
-                    <div class="form-group">
-                        <label for="loginEmail">Email</label>
-                        <input type="email" id="loginEmail" class="form-control" required>
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h2 id="pageTitle">Dashboard</h2>
+                <div class="user-info">
+                    <div class="user-avatar">JD</div>
+                    <div>
+                        <div class="user-name">John Doe</div>
+                        <div class="user-role">Student</div>
                     </div>
-                    <div class="form-group">
-                        <label for="loginPassword">Password</label>
-                        <input type="password" id="loginPassword" class="form-control" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Login</button>
-                </form>
-                <div class="auth-switch">
-                    Don't have an account? <a href="#" id="showRegister">Register</a>
                 </div>
             </div>
 
-            <div class="auth-container d-none" id="registerForm">
-                <h2>Create an Account</h2>
-                <form id="registerFormElement">
-                    <div class="form-group">
-                        <label for="registerName">Full Name</label>
-                        <input type="text" id="registerName" class="form-control" required>
+            <!-- Dashboard Tab -->
+            <div class="tab-content active" id="dashboard">
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon courses">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>12</h3>
+                            <p>Enrolled Courses</p>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="registerEmail">Email</label>
-                        <input type="email" id="registerEmail" class="form-control" required>
+                    <div class="stat-card">
+                        <div class="stat-icon progress">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>68%</h3>
+                            <p>Overall Progress</p>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="registerPassword">Password</label>
-                        <input type="password" id="registerPassword" class="form-control" required>
+                    <div class="stat-card">
+                        <div class="stat-icon completed">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>5</h3>
+                            <p>Completed Courses</p>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="registerRole">Role</label>
-                        <select id="registerRole" class="form-control" required>
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
-                        </select>
+                    <div class="stat-card">
+                        <div class="stat-icon students">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>24</h3>
+                            <p>Study Hours</p>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">Register</button>
-                </form>
-                <div class="auth-switch">
-                    Already have an account? <a href="#" id="showLogin">Login</a>
+                </div>
+
+                <h3 class="section-title">Continue Learning</h3>
+                <div class="courses-grid">
+                    <div class="course-card">
+                        <div class="course-image">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="course-content">
+                            <span class="course-category">Web Development</span>
+                            <h3 class="course-title">Advanced JavaScript</h3>
+                            <div class="course-meta">
+                                <span><i class="far fa-clock"></i> 12 hours</span>
+                                <span><i class="far fa-file-alt"></i> 8 modules</span>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 65%"></div>
+                                </div>
+                                <div class="progress-text">
+                                    <span>Progress</span>
+                                    <span>65%</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-block">Continue</button>
+                        </div>
+                    </div>
+                    <div class="course-card">
+                        <div class="course-image">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <div class="course-content">
+                            <span class="course-category">Design</span>
+                            <h3 class="course-title">UI/UX Fundamentals</h3>
+                            <div class="course-meta">
+                                <span><i class="far fa-clock"></i> 10 hours</span>
+                                <span><i class="far fa-file-alt"></i> 6 modules</span>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 40%"></div>
+                                </div>
+                                <div class="progress-text">
+                                    <span>Progress</span>
+                                    <span>40%</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-block">Continue</button>
+                        </div>
+                    </div>
+                    <div class="course-card">
+                        <div class="course-image">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="course-content">
+                            <span class="course-category">Data Science</span>
+                            <h3 class="course-title">Python for Data Analysis</h3>
+                            <div class="course-meta">
+                                <span><i class="far fa-clock"></i> 15 hours</span>
+                                <span><i class="far fa-file-alt"></i> 10 modules</span>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 20%"></div>
+                                </div>
+                                <div class="progress-text">
+                                    <span>Progress</span>
+                                    <span>20%</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-block">Continue</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="activity-feed">
+                    <h3 class="section-title">Recent Activity</h3>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>Started new lesson</h4>
+                            <p>You started "React Components" in Advanced JavaScript</p>
+                            <div class="activity-time">2 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>Completed quiz</h4>
+                            <p>You scored 85% on "CSS Fundamentals" quiz</p>
+                            <div class="activity-time">1 day ago</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-comment"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>Posted in discussion</h4>
+                            <p>You commented on "State Management in React"</p>
+                            <div class="activity-time">2 days ago</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
 
-        <!-- Dashboard Section -->
-        <section id="dashboardSection" class="d-none">
-            <div class="dashboard-header">
-                <h1 id="dashboardTitle">Dashboard</h1>
-                <div id="adminControls" class="d-none">
-                    <button class="btn btn-primary" id="addEmployeeBtn">Add Employee</button>
+            <!-- Courses Tab -->
+            <div class="tab-content" id="courses">
+                <div class="tabs">
+                    <div class="tab active" data-subtab="all-courses">All Courses</div>
+                    <div class="tab" data-subtab="in-progress">In Progress</div>
+                    <div class="tab" data-subtab="completed">Completed</div>
                 </div>
-            </div>
 
-            <div id="alertContainer"></div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title" id="employeeListTitle">Employees</h2>
-                    <div class="d-flex align-items-center">
-                        <input type="text" id="searchInput" class="form-control" placeholder="Search employees...">
+                <div class="subtab-content active" id="all-courses">
+                    <div class="courses-grid">
+                        <!-- Course cards will be populated by JS -->
                     </div>
                 </div>
-                <div class="table-responsive">
-                    <table class="table" id="employeesTable">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Department</th>
-                                <th>Position</th>
-                                <th>Status</th>
-                                <th id="adminActionsHeader" class="d-none">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="employeesTableBody">
-                            <!-- Employee data will be populated by JS -->
-                        </tbody>
-                    </table>
+            </div>
+
+            <!-- Admin Tab -->
+            <div class="tab-content" id="admin">
+                <h3 class="section-title">Admin Panel</h3>
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon courses">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>24</h3>
+                            <p>Total Courses</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon students">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>1,248</h3>
+                            <p>Registered Students</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon progress">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>72%</h3>
+                            <p>Avg. Completion Rate</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon completed">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>892</h3>
+                            <p>Certificates Issued</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="header mt-3">
+                    <h3>Course Management</h3>
+                    <button class="btn btn-primary" id="addCourseBtn">
+                        <i class="fas fa-plus"></i> Add Course
+                    </button>
+                </div>
+
+                <div class="courses-grid mt-3">
+                    <!-- Admin course cards will be populated by JS -->
                 </div>
             </div>
-        </section>
-    </main>
 
-    <!-- Add/Edit Employee Modal -->
-    <div class="modal" id="employeeModal">
+            <!-- Other tabs would be implemented similarly -->
+        </div>
+    </div>
+
+    <!-- Add Course Modal -->
+    <div class="modal" id="courseModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modalTitle">Add Employee</h3>
-                <button class="modal-close" id="closeModal">&times;</button>
+                <h3 id="modalTitle">Add New Course</h3>
             </div>
             <div class="modal-body">
-                <form id="employeeForm">
-                    <input type="hidden" id="employeeId">
+                <form id="courseForm">
                     <div class="form-group">
-                        <label for="employeeName">Full Name</label>
-                        <input type="text" id="employeeName" class="form-control" required>
+                        <label for="courseTitle">Course Title</label>
+                        <input type="text" id="courseTitle" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label for="employeeEmail">Email</label>
-                        <input type="email" id="employeeEmail" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="employeeDepartment">Department</label>
-                        <select id="employeeDepartment" class="form-control" required>
-                            <option value="">Select Department</option>
-                            <option value="Engineering">Engineering</option>
+                        <label for="courseCategory">Category</label>
+                        <select id="courseCategory" class="form-control" required>
+                            <option value="">Select Category</option>
+                            <option value="Web Development">Web Development</option>
+                            <option value="Data Science">Data Science</option>
+                            <option value="Design">Design</option>
+                            <option value="Business">Business</option>
                             <option value="Marketing">Marketing</option>
-                            <option value="Sales">Sales</option>
-                            <option value="HR">HR</option>
-                            <option value="Finance">Finance</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="employeePosition">Position</label>
-                        <input type="text" id="employeePosition" class="form-control" required>
+                        <label for="courseDescription">Description</label>
+                        <textarea id="courseDescription" class="form-control" rows="3" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="employeeStatus">Status</label>
-                        <select id="employeeStatus" class="form-control" required>
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
-                            <option value="On Leave">On Leave</option>
-                        </select>
+                        <label for="courseDuration">Duration (hours)</label>
+                        <input type="number" id="courseDuration" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="courseModules">Number of Modules</label>
+                        <input type="number" id="courseModules" class="form-control" required>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn" id="cancelEmployeeBtn">Cancel</button>
-                <button class="btn btn-primary" id="saveEmployeeBtn">Save Employee</button>
+                <button class="btn btn-outline" id="cancelCourseBtn">Cancel</button>
+                <button class="btn btn-primary" id="saveCourseBtn">Save Course</button>
             </div>
         </div>
     </div>
@@ -503,427 +826,367 @@
     <script>
         // Application State
         const state = {
-            currentUser: null,
-            employees: [],
-            isEditing: false
+            currentUser: {
+                name: "John Doe",
+                role: "student", // or "admin"
+                avatar: "JD"
+            },
+            courses: [
+                {
+                    id: 1,
+                    title: "Advanced JavaScript",
+                    category: "Web Development",
+                    duration: 12,
+                    modules: 8,
+                    progress: 65,
+                    image: "code"
+                },
+                {
+                    id: 2,
+                    title: "UI/UX Fundamentals",
+                    category: "Design",
+                    duration: 10,
+                    modules: 6,
+                    progress: 40,
+                    image: "palette"
+                },
+                {
+                    id: 3,
+                    title: "Python for Data Analysis",
+                    category: "Data Science",
+                    duration: 15,
+                    modules: 10,
+                    progress: 20,
+                    image: "database"
+                },
+                {
+                    id: 4,
+                    title: "Digital Marketing Strategy",
+                    category: "Marketing",
+                    duration: 8,
+                    modules: 5,
+                    progress: 0,
+                    image: "bullhorn"
+                },
+                {
+                    id: 5,
+                    title: "React Native Mobile Development",
+                    category: "Web Development",
+                    duration: 14,
+                    modules: 9,
+                    progress: 0,
+                    image: "mobile"
+                }
+            ],
+            currentTab: "dashboard"
         };
 
         // DOM Elements
-        const authSection = document.getElementById('authSection');
-        const dashboardSection = document.getElementById('dashboardSection');
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const loginFormElement = document.getElementById('loginFormElement');
-        const registerFormElement = document.getElementById('registerFormElement');
-        const showRegisterLink = document.getElementById('showRegister');
-        const showLoginLink = document.getElementById('showLogin');
-        const navLinks = document.getElementById('navLinks');
-        const userInfo = document.getElementById('userInfo');
-        const dashboardTitle = document.getElementById('dashboardTitle');
-        const adminControls = document.getElementById('adminControls');
-        const employeeListTitle = document.getElementById('employeeListTitle');
-        const adminActionsHeader = document.getElementById('adminActionsHeader');
-        const employeesTableBody = document.getElementById('employeesTableBody');
-        const addEmployeeBtn = document.getElementById('addEmployeeBtn');
-        const employeeModal = document.getElementById('employeeModal');
-        const modalTitle = document.getElementById('modalTitle');
-        const employeeForm = document.getElementById('employeeForm');
-        const closeModal = document.getElementById('closeModal');
-        const cancelEmployeeBtn = document.getElementById('cancelEmployeeBtn');
-        const saveEmployeeBtn = document.getElementById('saveEmployeeBtn');
-        const searchInput = document.getElementById('searchInput');
-        const alertContainer = document.getElementById('alertContainer');
+        const pageTitle = document.getElementById('pageTitle');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const sidebarLinks = document.querySelectorAll('.sidebar-menu a');
+        const adminOnlyElements = document.querySelectorAll('.admin-only');
+        const addCourseBtn = document.getElementById('addCourseBtn');
+        const courseModal = document.getElementById('courseModal');
+        const cancelCourseBtn = document.getElementById('cancelCourseBtn');
+        const saveCourseBtn = document.getElementById('saveCourseBtn');
+        const courseForm = document.getElementById('courseForm');
 
         // Initialize the application
         function init() {
-            // Check if user is already logged in
-            const savedUser = localStorage.getItem('currentUser');
-            if (savedUser) {
-                state.currentUser = JSON.parse(savedUser);
-                showDashboard();
-            } else {
-                showAuth();
-            }
-
-            // Load employees from localStorage
-            const savedEmployees = localStorage.getItem('employees');
-            if (savedEmployees) {
-                state.employees = JSON.parse(savedEmployees);
-            } else {
-                // Initialize with some sample data
-                state.employees = [
-                    { id: 1, name: 'John Doe', email: 'john@example.com', department: 'Engineering', position: 'Software Engineer', status: 'Active' },
-                    { id: 2, name: 'Jane Smith', email: 'jane@example.com', department: 'Marketing', position: 'Marketing Manager', status: 'Active' },
-                    { id: 3, name: 'Robert Johnson', email: 'robert@example.com', department: 'Sales', position: 'Sales Representative', status: 'Inactive' },
-                    { id: 4, name: 'Emily Davis', email: 'emily@example.com', department: 'HR', position: 'HR Specialist', status: 'Active' }
-                ];
-                localStorage.setItem('employees', JSON.stringify(state.employees));
-            }
-
-            // Load users from localStorage
-            const savedUsers = localStorage.getItem('users');
-            if (!savedUsers) {
-                // Initialize with some sample users
-                const users = [
-                    { id: 1, name: 'Admin User', email: 'admin@example.com', password: 'admin123', role: 'admin' },
-                    { id: 2, name: 'Regular User', email: 'user@example.com', password: 'user123', role: 'user' }
-                ];
-                localStorage.setItem('users', JSON.stringify(users));
-            }
-
-            // Set up event listeners
+            updateUIForUserRole();
+            renderCourses();
             setupEventListeners();
         }
 
-        // Set up all event listeners
+        // Set up event listeners
         function setupEventListeners() {
-            // Auth form events
-            loginFormElement.addEventListener('submit', handleLogin);
-            registerFormElement.addEventListener('submit', handleRegister);
-            showRegisterLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                showRegisterForm();
-            });
-            showLoginLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                showLoginForm();
+            // Sidebar navigation
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const tab = link.getAttribute('data-tab');
+                    switchTab(tab);
+                });
             });
 
-            // Employee management events
-            addEmployeeBtn.addEventListener('click', () => openEmployeeModal());
-            closeModal.addEventListener('click', closeEmployeeModal);
-            cancelEmployeeBtn.addEventListener('click', closeEmployeeModal);
-            saveEmployeeBtn.addEventListener('click', saveEmployee);
-            searchInput.addEventListener('input', filterEmployees);
+            // Admin panel events
+            if (addCourseBtn) {
+                addCourseBtn.addEventListener('click', () => openCourseModal());
+            }
+            
+            if (cancelCourseBtn) {
+                cancelCourseBtn.addEventListener('click', closeCourseModal);
+            }
+            
+            if (saveCourseBtn) {
+                saveCourseBtn.addEventListener('click', saveCourse);
+            }
 
             // Close modal when clicking outside
             window.addEventListener('click', (e) => {
-                if (e.target === employeeModal) {
-                    closeEmployeeModal();
+                if (e.target === courseModal) {
+                    closeCourseModal();
                 }
             });
         }
 
-        // Authentication functions
-        function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const user = users.find(u => u.email === email && u.password === password);
-
-            if (user) {
-                state.currentUser = user;
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                showDashboard();
-                showAlert('Login successful!', 'success');
-            } else {
-                showAlert('Invalid email or password', 'danger');
-            }
-        }
-
-        function handleRegister(e) {
-            e.preventDefault();
-            const name = document.getElementById('registerName').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            const role = document.getElementById('registerRole').value;
-
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            
-            // Check if user already exists
-            if (users.find(u => u.email === email)) {
-                showAlert('User with this email already exists', 'danger');
-                return;
-            }
-
-            // Create new user
-            const newUser = {
-                id: users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1,
-                name,
-                email,
-                password,
-                role
-            };
-
-            users.push(newUser);
-            localStorage.setItem('users', JSON.stringify(users));
-            
-            state.currentUser = newUser;
-            localStorage.setItem('currentUser', JSON.stringify(newUser));
-            showDashboard();
-            showAlert('Registration successful!', 'success');
-        }
-
-        function logout() {
-            state.currentUser = null;
-            localStorage.removeItem('currentUser');
-            showAuth();
-            showAlert('You have been logged out', 'info');
-        }
-
-        // UI Navigation functions
-        function showAuth() {
-            authSection.classList.remove('d-none');
-            dashboardSection.classList.add('d-none');
-            showLoginForm();
-        }
-
-        function showDashboard() {
-            authSection.classList.add('d-none');
-            dashboardSection.classList.remove('d-none');
-            updateUIForUserRole();
-            renderEmployees();
-        }
-
-        function showLoginForm() {
-            loginForm.classList.remove('d-none');
-            registerForm.classList.add('d-none');
-        }
-
-        function showRegisterForm() {
-            loginForm.classList.add('d-none');
-            registerForm.classList.remove('d-none');
-        }
-
-        function updateUIForUserRole() {
-            if (!state.currentUser) return;
-
-            // Update dashboard title
-            dashboardTitle.textContent = `Welcome, ${state.currentUser.name}`;
-            
-            // Update employee list title
-            employeeListTitle.textContent = state.currentUser.role === 'admin' 
-                ? 'All Employees' 
-                : 'My Colleagues';
-
-            // Show/hide admin controls
-            if (state.currentUser.role === 'admin') {
-                adminControls.classList.remove('d-none');
-                adminActionsHeader.classList.remove('d-none');
-            } else {
-                adminControls.classList.add('d-none');
-                adminActionsHeader.classList.add('d-none');
-            }
-
-            // Update navigation
-            navLinks.innerHTML = '';
-            if (state.currentUser.role === 'admin') {
-                const adminLink = document.createElement('a');
-                adminLink.href = '#';
-                adminLink.textContent = 'Admin Panel';
-                navLinks.appendChild(adminLink);
-            }
-
-            // Update user info
-            userInfo.innerHTML = `
-                <span>Hello, ${state.currentUser.name}</span>
-                <span class="badge ${state.currentUser.role === 'admin' ? 'badge-warning' : 'badge-success'}">
-                    ${state.currentUser.role}
-                </span>
-                <button class="btn btn-danger" id="logoutBtn">Logout</button>
-            `;
-
-            // Add logout event listener
-            document.getElementById('logoutBtn').addEventListener('click', logout);
-        }
-
-        // Employee management functions
-        function renderEmployees() {
-            employeesTableBody.innerHTML = '';
-            
-            state.employees.forEach(employee => {
-                const row = document.createElement('tr');
-                
-                row.innerHTML = `
-                    <td>${employee.id}</td>
-                    <td>${employee.name}</td>
-                    <td>${employee.email}</td>
-                    <td>${employee.department}</td>
-                    <td>${employee.position}</td>
-                    <td>
-                        <span class="badge ${
-                            employee.status === 'Active' ? 'badge-success' : 
-                            employee.status === 'Inactive' ? 'badge-danger' : 'badge-warning'
-                        }">
-                            ${employee.status}
-                        </span>
-                    </td>
-                    ${state.currentUser.role === 'admin' ? 
-                        `<td>
-                            <button class="btn btn-primary btn-sm edit-employee" data-id="${employee.id}">Edit</button>
-                            <button class="btn btn-danger btn-sm delete-employee" data-id="${employee.id}">Delete</button>
-                        </td>` : 
-                        '<td></td>'
-                    }
-                `;
-                
-                employeesTableBody.appendChild(row);
+        // Switch between tabs
+        function switchTab(tabName) {
+            // Update active link in sidebar
+            sidebarLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-tab') === tabName) {
+                    link.classList.add('active');
+                }
             });
 
-            // Add event listeners for edit and delete buttons
+            // Update active tab content
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+                if (content.id === tabName) {
+                    content.classList.add('active');
+                }
+            });
+
+            // Update page title
+            pageTitle.textContent = formatTabName(tabName);
+            
+            // Store current tab
+            state.currentTab = tabName;
+            
+            // Special rendering for specific tabs
+            if (tabName === 'courses') {
+                renderCourses();
+            } else if (tabName === 'admin') {
+                renderAdminCourses();
+            }
+        }
+
+        // Format tab name for display
+        function formatTabName(tabName) {
+            return tabName.charAt(0).toUpperCase() + tabName.slice(1);
+        }
+
+        // Update UI based on user role
+        function updateUIForUserRole() {
             if (state.currentUser.role === 'admin') {
-                document.querySelectorAll('.edit-employee').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        const employeeId = parseInt(e.target.getAttribute('data-id'));
-                        openEmployeeModal(employeeId);
-                    });
-                });
-
-                document.querySelectorAll('.delete-employee').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        const employeeId = parseInt(e.target.getAttribute('data-id'));
-                        deleteEmployee(employeeId);
-                    });
-                });
-            }
-        }
-
-        function openEmployeeModal(employeeId = null) {
-            state.isEditing = employeeId !== null;
-            
-            if (state.isEditing) {
-                modalTitle.textContent = 'Edit Employee';
-                const employee = state.employees.find(emp => emp.id === employeeId);
-                document.getElementById('employeeId').value = employee.id;
-                document.getElementById('employeeName').value = employee.name;
-                document.getElementById('employeeEmail').value = employee.email;
-                document.getElementById('employeeDepartment').value = employee.department;
-                document.getElementById('employeePosition').value = employee.position;
-                document.getElementById('employeeStatus').value = employee.status;
+                adminOnlyElements.forEach(el => el.classList.remove('d-none'));
             } else {
-                modalTitle.textContent = 'Add Employee';
-                employeeForm.reset();
-                document.getElementById('employeeId').value = '';
+                adminOnlyElements.forEach(el => el.classList.add('d-none'));
             }
             
-            employeeModal.style.display = 'flex';
+            // Update user info in header
+            document.querySelector('.user-name').textContent = state.currentUser.name;
+            document.querySelector('.user-role').textContent = 
+                state.currentUser.role === 'admin' ? 'Administrator' : 'Student';
+            document.querySelector('.user-avatar').textContent = state.currentUser.avatar;
         }
 
-        function closeEmployeeModal() {
-            employeeModal.style.display = 'none';
+        // Render courses in the courses tab
+        function renderCourses() {
+            const coursesGrid = document.querySelector('#courses .courses-grid');
+            if (!coursesGrid) return;
+            
+            coursesGrid.innerHTML = '';
+            
+            state.courses.forEach(course => {
+                const courseCard = createCourseCard(course, false);
+                coursesGrid.appendChild(courseCard);
+            });
         }
 
-        function saveEmployee() {
-            const id = document.getElementById('employeeId').value;
-            const name = document.getElementById('employeeName').value;
-            const email = document.getElementById('employeeEmail').value;
-            const department = document.getElementById('employeeDepartment').value;
-            const position = document.getElementById('employeePosition').value;
-            const status = document.getElementById('employeeStatus').value;
+        // Render courses in the admin tab
+        function renderAdminCourses() {
+            const adminCoursesGrid = document.querySelector('#admin .courses-grid');
+            if (!adminCoursesGrid) return;
+            
+            adminCoursesGrid.innerHTML = '';
+            
+            state.courses.forEach(course => {
+                const courseCard = createCourseCard(course, true);
+                adminCoursesGrid.appendChild(courseCard);
+            });
+        }
 
-            if (state.isEditing) {
-                // Update existing employee
-                const index = state.employees.findIndex(emp => emp.id === parseInt(id));
+        // Create a course card element
+        function createCourseCard(course, isAdmin = false) {
+            const card = document.createElement('div');
+            card.className = 'course-card';
+            
+            const iconClass = getCourseIcon(course.image);
+            
+            card.innerHTML = `
+                <div class="course-image">
+                    <i class="fas fa-${iconClass}"></i>
+                </div>
+                <div class="course-content">
+                    <span class="course-category">${course.category}</span>
+                    <h3 class="course-title">${course.title}</h3>
+                    <div class="course-meta">
+                        <span><i class="far fa-clock"></i> ${course.duration} hours</span>
+                        <span><i class="far fa-file-alt"></i> ${course.modules} modules</span>
+                    </div>
+                    ${!isAdmin ? `
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress" style="width: ${course.progress}%"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>Progress</span>
+                            <span>${course.progress}%</span>
+                        </div>
+                    </div>
+                    ` : ''}
+                    <div class="d-flex" style="gap: 0.5rem;">
+                        ${isAdmin ? `
+                        <button class="btn btn-outline edit-course" data-id="${course.id}">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-outline delete-course" data-id="${course.id}">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                        ` : `
+                        <button class="btn btn-primary btn-block">
+                            ${course.progress > 0 ? 'Continue' : 'Start'}
+                        </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            
+            // Add event listeners for admin buttons
+            if (isAdmin) {
+                const editBtn = card.querySelector('.edit-course');
+                const deleteBtn = card.querySelector('.delete-course');
+                
+                editBtn.addEventListener('click', () => editCourse(course.id));
+                deleteBtn.addEventListener('click', () => deleteCourse(course.id));
+            }
+            
+            return card;
+        }
+
+        // Get appropriate icon for course
+        function getCourseIcon(image) {
+            const iconMap = {
+                'code': 'code',
+                'palette': 'palette',
+                'database': 'database',
+                'bullhorn': 'bullhorn',
+                'mobile': 'mobile-alt'
+            };
+            
+            return iconMap[image] || 'book';
+        }
+
+        // Course modal functions
+        function openCourseModal(courseId = null) {
+            if (courseId) {
+                // Editing existing course
+                const course = state.courses.find(c => c.id === courseId);
+                if (course) {
+                    document.getElementById('modalTitle').textContent = 'Edit Course';
+                    document.getElementById('courseTitle').value = course.title;
+                    document.getElementById('courseCategory').value = course.category;
+                    document.getElementById('courseDescription').value = course.description || '';
+                    document.getElementById('courseDuration').value = course.duration;
+                    document.getElementById('courseModules').value = course.modules;
+                    // Store the course ID in a hidden field or data attribute
+                    courseForm.setAttribute('data-course-id', courseId);
+                }
+            } else {
+                // Adding new course
+                document.getElementById('modalTitle').textContent = 'Add New Course';
+                courseForm.reset();
+                courseForm.removeAttribute('data-course-id');
+            }
+            
+            courseModal.style.display = 'flex';
+        }
+
+        function closeCourseModal() {
+            courseModal.style.display = 'none';
+        }
+
+        function saveCourse() {
+            const title = document.getElementById('courseTitle').value;
+            const category = document.getElementById('courseCategory').value;
+            const description = document.getElementById('courseDescription').value;
+            const duration = parseInt(document.getElementById('courseDuration').value);
+            const modules = parseInt(document.getElementById('courseModules').value);
+            
+            const courseId = courseForm.getAttribute('data-course-id');
+            
+            if (courseId) {
+                // Update existing course
+                const index = state.courses.findIndex(c => c.id === parseInt(courseId));
                 if (index !== -1) {
-                    state.employees[index] = {
-                        ...state.employees[index],
-                        name,
-                        email,
-                        department,
-                        position,
-                        status
+                    state.courses[index] = {
+                        ...state.courses[index],
+                        title,
+                        category,
+                        description,
+                        duration,
+                        modules
                     };
                 }
-                showAlert('Employee updated successfully!', 'success');
+                alert('Course updated successfully!');
             } else {
-                // Add new employee
-                const newId = state.employees.length > 0 ? Math.max(...state.employees.map(emp => emp.id)) + 1 : 1;
-                state.employees.push({
+                // Add new course
+                const newId = state.courses.length > 0 ? Math.max(...state.courses.map(c => c.id)) + 1 : 1;
+                state.courses.push({
                     id: newId,
-                    name,
-                    email,
-                    department,
-                    position,
-                    status
+                    title,
+                    category,
+                    description,
+                    duration,
+                    modules,
+                    progress: 0,
+                    image: getDefaultImageForCategory(category)
                 });
-                showAlert('Employee added successfully!', 'success');
+                alert('Course added successfully!');
             }
-
-            localStorage.setItem('employees', JSON.stringify(state.employees));
-            renderEmployees();
-            closeEmployeeModal();
+            
+            // Update UI
+            if (state.currentTab === 'admin') {
+                renderAdminCourses();
+            } else if (state.currentTab === 'courses') {
+                renderCourses();
+            }
+            
+            closeCourseModal();
         }
 
-        function deleteEmployee(employeeId) {
-            if (confirm('Are you sure you want to delete this employee?')) {
-                state.employees = state.employees.filter(emp => emp.id !== employeeId);
-                localStorage.setItem('employees', JSON.stringify(state.employees));
-                renderEmployees();
-                showAlert('Employee deleted successfully!', 'success');
-            }
+        function getDefaultImageForCategory(category) {
+            const categoryMap = {
+                'Web Development': 'code',
+                'Data Science': 'database',
+                'Design': 'palette',
+                'Business': 'chart-line',
+                'Marketing': 'bullhorn'
+            };
+            
+            return categoryMap[category] || 'book';
         }
 
-        function filterEmployees() {
-            const searchTerm = searchInput.value.toLowerCase();
-            const filteredEmployees = state.employees.filter(employee => 
-                employee.name.toLowerCase().includes(searchTerm) ||
-                employee.email.toLowerCase().includes(searchTerm) ||
-                employee.department.toLowerCase().includes(searchTerm) ||
-                employee.position.toLowerCase().includes(searchTerm)
-            );
-            
-            employeesTableBody.innerHTML = '';
-            
-            filteredEmployees.forEach(employee => {
-                const row = document.createElement('tr');
+        function editCourse(courseId) {
+            openCourseModal(courseId);
+        }
+
+        function deleteCourse(courseId) {
+            if (confirm('Are you sure you want to delete this course?')) {
+                state.courses = state.courses.filter(c => c.id !== courseId);
                 
-                row.innerHTML = `
-                    <td>${employee.id}</td>
-                    <td>${employee.name}</td>
-                    <td>${employee.email}</td>
-                    <td>${employee.department}</td>
-                    <td>${employee.position}</td>
-                    <td>
-                        <span class="badge ${
-                            employee.status === 'Active' ? 'badge-success' : 
-                            employee.status === 'Inactive' ? 'badge-danger' : 'badge-warning'
-                        }">
-                            ${employee.status}
-                        </span>
-                    </td>
-                    ${state.currentUser.role === 'admin' ? 
-                        `<td>
-                            <button class="btn btn-primary btn-sm edit-employee" data-id="${employee.id}">Edit</button>
-                            <button class="btn btn-danger btn-sm delete-employee" data-id="${employee.id}">Delete</button>
-                        </td>` : 
-                        '<td></td>'
-                    }
-                `;
+                // Update UI
+                if (state.currentTab === 'admin') {
+                    renderAdminCourses();
+                } else if (state.currentTab === 'courses') {
+                    renderCourses();
+                }
                 
-                employeesTableBody.appendChild(row);
-            });
-
-            // Reattach event listeners for edit and delete buttons
-            if (state.currentUser.role === 'admin') {
-                document.querySelectorAll('.edit-employee').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        const employeeId = parseInt(e.target.getAttribute('data-id'));
-                        openEmployeeModal(employeeId);
-                    });
-                });
-
-                document.querySelectorAll('.delete-employee').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        const employeeId = parseInt(e.target.getAttribute('data-id'));
-                        deleteEmployee(employeeId);
-                    });
-                });
+                alert('Course deleted successfully!');
             }
-        }
-
-        // Utility functions
-        function showAlert(message, type) {
-            const alert = document.createElement('div');
-            alert.className = `alert alert-${type}`;
-            alert.textContent = message;
-            
-            alertContainer.appendChild(alert);
-            
-            setTimeout(() => {
-                alert.remove();
-            }, 3000);
         }
 
         // Initialize the application when the DOM is loaded
