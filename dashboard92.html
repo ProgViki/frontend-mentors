@@ -1,1 +1,934 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management System</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #34495e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: var(--secondary);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 140px);
+        }
+        
+        /* Auth Forms */
+        .auth-container {
+            max-width: 400px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .auth-container h2 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--secondary);
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .auth-switch {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .auth-switch a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        /* Dashboard Styles */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .dashboard-header h1 {
+            color: var(--secondary);
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        /* Table Styles */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th, .table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        .table tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .badge-warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .badge-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            padding: 1rem 1.5rem;
+            background-color: var(--secondary);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+        
+        /* Alert Styles */
+        .alert {
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+        
+        .d-none {
+            display: none;
+        }
+        
+        .d-flex {
+            display: flex;
+        }
+        
+        .justify-content-between {
+            justify-content: space-between;
+        }
+        
+        .align-items-center {
+            align-items: center;
+        }
+        
+        .mb-3 {
+            margin-bottom: 1rem;
+        }
+        
+        .mt-3 {
+            margin-top: 1rem;
+        }
+        
+        .w-100 {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">Employee Management System</div>
+            <nav class="nav-links" id="navLinks">
+                <!-- Navigation links will be populated by JS -->
+            </nav>
+            <div class="user-info" id="userInfo">
+                <!-- User info will be populated by JS -->
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Authentication Section -->
+        <section id="authSection">
+            <div class="auth-container" id="loginForm">
+                <h2>Login to Your Account</h2>
+                <form id="loginFormElement">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </form>
+                <div class="auth-switch">
+                    Don't have an account? <a href="#" id="showRegister">Register</a>
+                </div>
+            </div>
+
+            <div class="auth-container d-none" id="registerForm">
+                <h2>Create an Account</h2>
+                <form id="registerFormElement">
+                    <div class="form-group">
+                        <label for="registerName">Full Name</label>
+                        <input type="text" id="registerName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerRole">Role</label>
+                        <select id="registerRole" class="form-control" required>
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Register</button>
+                </form>
+                <div class="auth-switch">
+                    Already have an account? <a href="#" id="showLogin">Login</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Section -->
+        <section id="dashboardSection" class="d-none">
+            <div class="dashboard-header">
+                <h1 id="dashboardTitle">Dashboard</h1>
+                <div id="adminControls" class="d-none">
+                    <button class="btn btn-primary" id="addEmployeeBtn">Add Employee</button>
+                </div>
+            </div>
+
+            <div id="alertContainer"></div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" id="employeeListTitle">Employees</h2>
+                    <div class="d-flex align-items-center">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Search employees...">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table" id="employeesTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Department</th>
+                                <th>Position</th>
+                                <th>Status</th>
+                                <th id="adminActionsHeader" class="d-none">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employeesTableBody">
+                            <!-- Employee data will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Add/Edit Employee Modal -->
+    <div class="modal" id="employeeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add Employee</h3>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="employeeForm">
+                    <input type="hidden" id="employeeId">
+                    <div class="form-group">
+                        <label for="employeeName">Full Name</label>
+                        <input type="text" id="employeeName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="employeeEmail">Email</label>
+                        <input type="email" id="employeeEmail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="employeeDepartment">Department</label>
+                        <select id="employeeDepartment" class="form-control" required>
+                            <option value="">Select Department</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Sales">Sales</option>
+                            <option value="HR">HR</option>
+                            <option value="Finance">Finance</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="employeePosition">Position</label>
+                        <input type="text" id="employeePosition" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="employeeStatus">Status</label>
+                        <select id="employeeStatus" class="form-control" required>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                            <option value="On Leave">On Leave</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="cancelEmployeeBtn">Cancel</button>
+                <button class="btn btn-primary" id="saveEmployeeBtn">Save Employee</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application State
+        const state = {
+            currentUser: null,
+            employees: [],
+            isEditing: false
+        };
+
+        // DOM Elements
+        const authSection = document.getElementById('authSection');
+        const dashboardSection = document.getElementById('dashboardSection');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const loginFormElement = document.getElementById('loginFormElement');
+        const registerFormElement = document.getElementById('registerFormElement');
+        const showRegisterLink = document.getElementById('showRegister');
+        const showLoginLink = document.getElementById('showLogin');
+        const navLinks = document.getElementById('navLinks');
+        const userInfo = document.getElementById('userInfo');
+        const dashboardTitle = document.getElementById('dashboardTitle');
+        const adminControls = document.getElementById('adminControls');
+        const employeeListTitle = document.getElementById('employeeListTitle');
+        const adminActionsHeader = document.getElementById('adminActionsHeader');
+        const employeesTableBody = document.getElementById('employeesTableBody');
+        const addEmployeeBtn = document.getElementById('addEmployeeBtn');
+        const employeeModal = document.getElementById('employeeModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const employeeForm = document.getElementById('employeeForm');
+        const closeModal = document.getElementById('closeModal');
+        const cancelEmployeeBtn = document.getElementById('cancelEmployeeBtn');
+        const saveEmployeeBtn = document.getElementById('saveEmployeeBtn');
+        const searchInput = document.getElementById('searchInput');
+        const alertContainer = document.getElementById('alertContainer');
+
+        // Initialize the application
+        function init() {
+            // Check if user is already logged in
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                state.currentUser = JSON.parse(savedUser);
+                showDashboard();
+            } else {
+                showAuth();
+            }
+
+            // Load employees from localStorage
+            const savedEmployees = localStorage.getItem('employees');
+            if (savedEmployees) {
+                state.employees = JSON.parse(savedEmployees);
+            } else {
+                // Initialize with some sample data
+                state.employees = [
+                    { id: 1, name: 'John Doe', email: 'john@example.com', department: 'Engineering', position: 'Software Engineer', status: 'Active' },
+                    { id: 2, name: 'Jane Smith', email: 'jane@example.com', department: 'Marketing', position: 'Marketing Manager', status: 'Active' },
+                    { id: 3, name: 'Robert Johnson', email: 'robert@example.com', department: 'Sales', position: 'Sales Representative', status: 'Inactive' },
+                    { id: 4, name: 'Emily Davis', email: 'emily@example.com', department: 'HR', position: 'HR Specialist', status: 'Active' }
+                ];
+                localStorage.setItem('employees', JSON.stringify(state.employees));
+            }
+
+            // Load users from localStorage
+            const savedUsers = localStorage.getItem('users');
+            if (!savedUsers) {
+                // Initialize with some sample users
+                const users = [
+                    { id: 1, name: 'Admin User', email: 'admin@example.com', password: 'admin123', role: 'admin' },
+                    { id: 2, name: 'Regular User', email: 'user@example.com', password: 'user123', role: 'user' }
+                ];
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+
+            // Set up event listeners
+            setupEventListeners();
+        }
+
+        // Set up all event listeners
+        function setupEventListeners() {
+            // Auth form events
+            loginFormElement.addEventListener('submit', handleLogin);
+            registerFormElement.addEventListener('submit', handleRegister);
+            showRegisterLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                showRegisterForm();
+            });
+            showLoginLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                showLoginForm();
+            });
+
+            // Employee management events
+            addEmployeeBtn.addEventListener('click', () => openEmployeeModal());
+            closeModal.addEventListener('click', closeEmployeeModal);
+            cancelEmployeeBtn.addEventListener('click', closeEmployeeModal);
+            saveEmployeeBtn.addEventListener('click', saveEmployee);
+            searchInput.addEventListener('input', filterEmployees);
+
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === employeeModal) {
+                    closeEmployeeModal();
+                }
+            });
+        }
+
+        // Authentication functions
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                state.currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                showDashboard();
+                showAlert('Login successful!', 'success');
+            } else {
+                showAlert('Invalid email or password', 'danger');
+            }
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const role = document.getElementById('registerRole').value;
+
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            // Check if user already exists
+            if (users.find(u => u.email === email)) {
+                showAlert('User with this email already exists', 'danger');
+                return;
+            }
+
+            // Create new user
+            const newUser = {
+                id: users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1,
+                name,
+                email,
+                password,
+                role
+            };
+
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            state.currentUser = newUser;
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+            showDashboard();
+            showAlert('Registration successful!', 'success');
+        }
+
+        function logout() {
+            state.currentUser = null;
+            localStorage.removeItem('currentUser');
+            showAuth();
+            showAlert('You have been logged out', 'info');
+        }
+
+        // UI Navigation functions
+        function showAuth() {
+            authSection.classList.remove('d-none');
+            dashboardSection.classList.add('d-none');
+            showLoginForm();
+        }
+
+        function showDashboard() {
+            authSection.classList.add('d-none');
+            dashboardSection.classList.remove('d-none');
+            updateUIForUserRole();
+            renderEmployees();
+        }
+
+        function showLoginForm() {
+            loginForm.classList.remove('d-none');
+            registerForm.classList.add('d-none');
+        }
+
+        function showRegisterForm() {
+            loginForm.classList.add('d-none');
+            registerForm.classList.remove('d-none');
+        }
+
+        function updateUIForUserRole() {
+            if (!state.currentUser) return;
+
+            // Update dashboard title
+            dashboardTitle.textContent = `Welcome, ${state.currentUser.name}`;
+            
+            // Update employee list title
+            employeeListTitle.textContent = state.currentUser.role === 'admin' 
+                ? 'All Employees' 
+                : 'My Colleagues';
+
+            // Show/hide admin controls
+            if (state.currentUser.role === 'admin') {
+                adminControls.classList.remove('d-none');
+                adminActionsHeader.classList.remove('d-none');
+            } else {
+                adminControls.classList.add('d-none');
+                adminActionsHeader.classList.add('d-none');
+            }
+
+            // Update navigation
+            navLinks.innerHTML = '';
+            if (state.currentUser.role === 'admin') {
+                const adminLink = document.createElement('a');
+                adminLink.href = '#';
+                adminLink.textContent = 'Admin Panel';
+                navLinks.appendChild(adminLink);
+            }
+
+            // Update user info
+            userInfo.innerHTML = `
+                <span>Hello, ${state.currentUser.name}</span>
+                <span class="badge ${state.currentUser.role === 'admin' ? 'badge-warning' : 'badge-success'}">
+                    ${state.currentUser.role}
+                </span>
+                <button class="btn btn-danger" id="logoutBtn">Logout</button>
+            `;
+
+            // Add logout event listener
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+        }
+
+        // Employee management functions
+        function renderEmployees() {
+            employeesTableBody.innerHTML = '';
+            
+            state.employees.forEach(employee => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${employee.id}</td>
+                    <td>${employee.name}</td>
+                    <td>${employee.email}</td>
+                    <td>${employee.department}</td>
+                    <td>${employee.position}</td>
+                    <td>
+                        <span class="badge ${
+                            employee.status === 'Active' ? 'badge-success' : 
+                            employee.status === 'Inactive' ? 'badge-danger' : 'badge-warning'
+                        }">
+                            ${employee.status}
+                        </span>
+                    </td>
+                    ${state.currentUser.role === 'admin' ? 
+                        `<td>
+                            <button class="btn btn-primary btn-sm edit-employee" data-id="${employee.id}">Edit</button>
+                            <button class="btn btn-danger btn-sm delete-employee" data-id="${employee.id}">Delete</button>
+                        </td>` : 
+                        '<td></td>'
+                    }
+                `;
+                
+                employeesTableBody.appendChild(row);
+            });
+
+            // Add event listeners for edit and delete buttons
+            if (state.currentUser.role === 'admin') {
+                document.querySelectorAll('.edit-employee').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const employeeId = parseInt(e.target.getAttribute('data-id'));
+                        openEmployeeModal(employeeId);
+                    });
+                });
+
+                document.querySelectorAll('.delete-employee').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const employeeId = parseInt(e.target.getAttribute('data-id'));
+                        deleteEmployee(employeeId);
+                    });
+                });
+            }
+        }
+
+        function openEmployeeModal(employeeId = null) {
+            state.isEditing = employeeId !== null;
+            
+            if (state.isEditing) {
+                modalTitle.textContent = 'Edit Employee';
+                const employee = state.employees.find(emp => emp.id === employeeId);
+                document.getElementById('employeeId').value = employee.id;
+                document.getElementById('employeeName').value = employee.name;
+                document.getElementById('employeeEmail').value = employee.email;
+                document.getElementById('employeeDepartment').value = employee.department;
+                document.getElementById('employeePosition').value = employee.position;
+                document.getElementById('employeeStatus').value = employee.status;
+            } else {
+                modalTitle.textContent = 'Add Employee';
+                employeeForm.reset();
+                document.getElementById('employeeId').value = '';
+            }
+            
+            employeeModal.style.display = 'flex';
+        }
+
+        function closeEmployeeModal() {
+            employeeModal.style.display = 'none';
+        }
+
+        function saveEmployee() {
+            const id = document.getElementById('employeeId').value;
+            const name = document.getElementById('employeeName').value;
+            const email = document.getElementById('employeeEmail').value;
+            const department = document.getElementById('employeeDepartment').value;
+            const position = document.getElementById('employeePosition').value;
+            const status = document.getElementById('employeeStatus').value;
+
+            if (state.isEditing) {
+                // Update existing employee
+                const index = state.employees.findIndex(emp => emp.id === parseInt(id));
+                if (index !== -1) {
+                    state.employees[index] = {
+                        ...state.employees[index],
+                        name,
+                        email,
+                        department,
+                        position,
+                        status
+                    };
+                }
+                showAlert('Employee updated successfully!', 'success');
+            } else {
+                // Add new employee
+                const newId = state.employees.length > 0 ? Math.max(...state.employees.map(emp => emp.id)) + 1 : 1;
+                state.employees.push({
+                    id: newId,
+                    name,
+                    email,
+                    department,
+                    position,
+                    status
+                });
+                showAlert('Employee added successfully!', 'success');
+            }
+
+            localStorage.setItem('employees', JSON.stringify(state.employees));
+            renderEmployees();
+            closeEmployeeModal();
+        }
+
+        function deleteEmployee(employeeId) {
+            if (confirm('Are you sure you want to delete this employee?')) {
+                state.employees = state.employees.filter(emp => emp.id !== employeeId);
+                localStorage.setItem('employees', JSON.stringify(state.employees));
+                renderEmployees();
+                showAlert('Employee deleted successfully!', 'success');
+            }
+        }
+
+        function filterEmployees() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filteredEmployees = state.employees.filter(employee => 
+                employee.name.toLowerCase().includes(searchTerm) ||
+                employee.email.toLowerCase().includes(searchTerm) ||
+                employee.department.toLowerCase().includes(searchTerm) ||
+                employee.position.toLowerCase().includes(searchTerm)
+            );
+            
+            employeesTableBody.innerHTML = '';
+            
+            filteredEmployees.forEach(employee => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${employee.id}</td>
+                    <td>${employee.name}</td>
+                    <td>${employee.email}</td>
+                    <td>${employee.department}</td>
+                    <td>${employee.position}</td>
+                    <td>
+                        <span class="badge ${
+                            employee.status === 'Active' ? 'badge-success' : 
+                            employee.status === 'Inactive' ? 'badge-danger' : 'badge-warning'
+                        }">
+                            ${employee.status}
+                        </span>
+                    </td>
+                    ${state.currentUser.role === 'admin' ? 
+                        `<td>
+                            <button class="btn btn-primary btn-sm edit-employee" data-id="${employee.id}">Edit</button>
+                            <button class="btn btn-danger btn-sm delete-employee" data-id="${employee.id}">Delete</button>
+                        </td>` : 
+                        '<td></td>'
+                    }
+                `;
+                
+                employeesTableBody.appendChild(row);
+            });
+
+            // Reattach event listeners for edit and delete buttons
+            if (state.currentUser.role === 'admin') {
+                document.querySelectorAll('.edit-employee').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const employeeId = parseInt(e.target.getAttribute('data-id'));
+                        openEmployeeModal(employeeId);
+                    });
+                });
+
+                document.querySelectorAll('.delete-employee').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const employeeId = parseInt(e.target.getAttribute('data-id'));
+                        deleteEmployee(employeeId);
+                    });
+                });
+            }
+        }
+
+        // Utility functions
+        function showAlert(message, type) {
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            
+            alertContainer.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 3000);
+        }
+
+        // Initialize the application when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
